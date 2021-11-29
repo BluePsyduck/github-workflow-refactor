@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "0 0 * * 0"
 
+env:
+  PHP_MAIN_VERSION: "8.0"
+
 jobs:
 
   unit-tests:
@@ -123,7 +126,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.0"
+          php-version: ${{ env.PHP_MAIN_VERSION }}
           tools: cs2pr
           coverage: none
 
