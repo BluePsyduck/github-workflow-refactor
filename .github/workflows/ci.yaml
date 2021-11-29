@@ -10,13 +10,23 @@ env:
   PHP_VERSIONS: '["7.4", "8.0"]'
 
 jobs:
+  prepare-matrix:
+    name: Prepare Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: |
+          echo "::set-output name=matrix::${{ env.PHP_VERSIONS }}"
 
   unit-tests:
+    needs: prepare-matrix
     name: Unit Tests
     strategy:
       fail-fast: false
       matrix:
-        php-version: ${{ fromJSON(env.PHP_VERSIONS) }}
+        php-version: ${{ fromJSON(needs.prepare-matrix.outputs.matrix) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -80,7 +90,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ${{ fromJSON(env.PHP_VERSIONS) }}
+        php-version: ["7.4", "8.0"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
