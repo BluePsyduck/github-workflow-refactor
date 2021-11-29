@@ -7,6 +7,7 @@ on:
 
 env:
   PHP_MAIN_VERSION: "8.0"
+  PHP_VERSIONS: '["7.4", "8.0"]'
 
 jobs:
 
@@ -15,9 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version:
-          - "7.4"
-          - "8.0"
+        php-version: ${{ fromJSON(env.PHP_VERSIONS) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -81,9 +80,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version:
-          - "7.4"
-          - "8.0"
+        php-version: ${{ fromJSON(env.PHP_VERSIONS) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -157,7 +154,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.0"
+          php-version: ${{ env.PHP_MAIN_VERSION }}
           coverage: none
 
       - name: Get composer cache directory
