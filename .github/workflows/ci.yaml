@@ -7,7 +7,7 @@ on:
 
 env:
   PHP_MAIN_VERSION: "8.0"
-  PHP_VERSIONS: '["7.4", "8.0"]'
+  PHP_VERSIONS: '[7.4, 8.0]'
 
 jobs:
   prepare-matrix:
