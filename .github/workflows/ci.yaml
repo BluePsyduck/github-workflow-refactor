@@ -21,12 +21,11 @@ jobs:
         uses: sergeysova/jq-action@v2
         with:
           cmd: "jq -nc '$ARGS.positional' --args ${PHP_VERSIONS[@]}"
-      - name: Output PHP Versions
-        run: 'echo "JSON ${{ steps.versions.outputs.value }}"'
 
-      - id: set-matrix
+      - name: Set PHP Version Matrix
+        id: set-matrix
         run: |
-          echo '::set-output name=matrix::${{ env.PHP_VERSIONS }}'
+          echo '::set-output name=matrix::${{ steps.versions.outputs.value }}'
 
   unit-tests:
     needs: prepare-php-versions
