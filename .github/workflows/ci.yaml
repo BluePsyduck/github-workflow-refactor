@@ -37,7 +37,7 @@ jobs:
         run: |
           echo '::set-output name=list::${{ steps.list.outputs.value }}'
           echo '::set-output name=first::${{ steps.first.outputs.value }}'
-          echo '::set-output name=hasComposerLock::${{ hashFiles("composer.lock") != "" }}'
+          echo '::set-output name=hasComposerLock::${{ hashFiles('composer.lock') != '' }}'
 
   composer-validation:
     name: Composer Validation
