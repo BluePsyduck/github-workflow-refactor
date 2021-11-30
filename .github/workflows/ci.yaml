@@ -15,7 +15,11 @@ jobs:
     outputs:
       list: ${{ steps.set-outputs.outputs.list }}
       first: ${{ steps.set-outputs.outputs.first }}
+      hasComposerLock: ${{ steps.set-outputs.outputs.hasComposerLock }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+    
       - name: Format PHP version list
         id: list
         uses: sergeysova/jq-action@v2
@@ -33,12 +37,13 @@ jobs:
         run: |
           echo '::set-output name=list::${{ steps.list.outputs.value }}'
           echo '::set-output name=first::${{ steps.first.outputs.value }}'
+          echo '::set-output name=hasComposerLock::${{ hashFiles("composer.lock") != "" }}'
 
   composer-validation:
     name: Composer Validation
     needs: prepare-php-versions
     runs-on: ubuntu-latest
-    if: ${{ hashFiles('composer.lock') != '' }}
+    if: needs.prepare-php-versions.outputs.hasComposerLock
     steps:
       - name: checkout
         uses: actions/checkout@v2
