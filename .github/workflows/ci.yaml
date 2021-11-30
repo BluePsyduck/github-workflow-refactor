@@ -38,7 +38,7 @@ jobs:
     name: Composer Validation
     needs: prepare-php-versions
     runs-on: ubuntu-latest
-    if: hashFiles('composer.lock') != ''
+    if: ${{ hashFiles('composer.lock') != '' }}
     steps:
       - name: checkout
         uses: actions/checkout@v2
