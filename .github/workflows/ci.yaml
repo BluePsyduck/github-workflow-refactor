@@ -6,7 +6,6 @@ on:
     - cron: "0 0 * * 0"
 
 env:
-  PHP_MAIN_VERSION: "8.0"
   PHP_VERSIONS: '8.0 7.4'
 
 jobs:
@@ -14,26 +13,34 @@ jobs:
     name: Prepare PHP Versions
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      list: ${{ steps.set-outputs.outputs.list }}
+      first: ${{ steps.set-outputs.outputs.first }}
     steps:
-      - name: Format PHP Versions
-        id: versions
+      - name: Format PHP version list
+        id: list
         uses: sergeysova/jq-action@v2
         with:
           cmd: "jq -nc '$ARGS.positional' --args ${PHP_VERSIONS[@]}"
 
+      - name: Extract first PHP Version
+        id: first
+        uses: sergeysova/jq-action@v2
+        with:
+          cmd: "jq -nc '$ARGS.positional[0]' --args ${PHP_VERSIONS[@]}"
+
       - name: Set PHP Version Matrix
-        id: set-matrix
+        id: set-outputs
         run: |
-          echo '::set-output name=matrix::${{ steps.versions.outputs.value }}'
+          echo '::set-output name=list::${{ steps.list.outputs.value }}'
+          echo '::set-output name=first::${{ steps.first.outputs.value }}'
 
   unit-tests:
-    needs: prepare-php-versions
     name: Unit Tests
+    needs: prepare-php-versions
     strategy:
       fail-fast: false
       matrix:
-        php-version: ${{ fromJSON(needs.prepare-php-versions.outputs.matrix) }}
+        php-version: ${{ fromJSON(needs.prepare-php-versions.outputs.list) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -94,10 +101,11 @@ jobs:
 
   integration-tests:
     name: Integration Tests
+    needs: prepare-php-versions
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["7.4", "8.0"]
+        php-version: ${{ fromJSON(needs.prepare-php-versions.outputs.list) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -132,6 +140,7 @@ jobs:
 
   coding-guidelines:
     name: Coding Guidelines
+    needs: prepare-php-versions
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -140,7 +149,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_MAIN_VERSION }}
+          php-version: ${{ fromJSON(needs.prepare-php-versions.outputs.first) }}
           tools: cs2pr
           coverage: none
 
@@ -163,6 +172,7 @@ jobs:
 
   type-checker:
     name: Type Checker
+    needs: prepare-php-versions
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -171,7 +181,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_MAIN_VERSION }}
+          php-version: ${{ fromJSON(needs.prepare-php-versions.outputs.first) }}
           coverage: none
 
       - name: Get composer cache directory
