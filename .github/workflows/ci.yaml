@@ -16,7 +16,7 @@ jobs:
     outputs:
       list: ${{ steps.set-outputs.outputs.list }}
       first: ${{ steps.set-outputs.outputs.first }}
-      hasComposerLock: ${{ steps.set-outputs.outputs.hasComposerLock }}
+      validateComposer: ${{ steps.set-outputs.outputs.validateComposer }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -38,13 +38,13 @@ jobs:
         run: |
           echo '::set-output name=list::${{ steps.list.outputs.value }}'
           echo '::set-output name=first::${{ steps.first.outputs.value }}'
-          echo '::set-output name=hasComposerLock::${{ hashFiles('composer.lock') != '' }}'
+          echo '::set-output name=hasComposerLock::${{ emv.VALIDATE_COMPOSER }}'
 
   composer-validation:
     name: Composer Validation
     needs: prepare-php-versions
     runs-on: ubuntu-latest
-    if: env.VALIDATE_COMPOSER
+    if: ${{ needs.prepare-php-versions.outputs.hasComposerLock }}
     steps:
       - name: checkout
         uses: actions/checkout@v2
