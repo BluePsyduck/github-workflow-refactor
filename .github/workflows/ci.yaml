@@ -34,6 +34,25 @@ jobs:
           echo '::set-output name=list::${{ steps.list.outputs.value }}'
           echo '::set-output name=first::${{ steps.first.outputs.value }}'
 
+  composer-validation:
+    name: Composer Validation
+    needs: prepare-php-versions
+    runs-on: ubuntu-latest
+    if: hashFiles('composer.lock') != ''
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ fromJSON(needs.prepare-php-versions.outputs.first) }}
+          extensions: json, pdo_mysql, zip
+          coverage: none
+
+      - name: Run composer validate
+        run: composer validate --strict
+
   unit-tests:
     name: Unit Tests
     needs: prepare-php-versions
