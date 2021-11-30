@@ -7,6 +7,7 @@ on:
 
 env:
   PHP_VERSIONS: '8.0 7.4'
+  VALIDATE_COMPOSER: false
 
 jobs:
   prepare-php-versions:
@@ -43,7 +44,7 @@ jobs:
     name: Composer Validation
     needs: prepare-php-versions
     runs-on: ubuntu-latest
-    if: needs.prepare-php-versions.outputs.hasComposerLock
+    if: env.VALIDATE_COMPOSER
     steps:
       - name: checkout
         uses: actions/checkout@v2
