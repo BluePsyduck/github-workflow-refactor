@@ -9,6 +9,12 @@ env:
   PHP_VERSIONS: '8.0 7.4'
 
 jobs:
+  call-worklfow:
+    name: Call general PHP workflow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: .github/workflows/ci-php-general.yaml
+
   prepare-php-versions:
     name: Prepare PHP Versions
     runs-on: ubuntu-latest
@@ -38,25 +44,6 @@ jobs:
           echo '::set-output name=list::${{ steps.list.outputs.value }}'
           echo '::set-output name=first::${{ steps.first.outputs.value }}'
           echo '::set-output name=hasComposerLock::${{ hashFiles('compsoer.lock') != '' }}'
-
-  composer-validation:
-    name: Composer Validation
-    needs: prepare-php-versions
-    runs-on: ubuntu-latest
-    if: ${{ needs.prepare-php-versions.outputs.hasComposerLock }}
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ fromJSON(needs.prepare-php-versions.outputs.first) }}
-          extensions: json, pdo_mysql, zip
-          coverage: none
-
-      - name: Run composer validate
-        run: composer validate --strict
 
   unit-tests:
     name: Unit Tests
@@ -162,66 +149,3 @@ jobs:
 
       - name: Run phpunit
         run: vendor/bin/phpunit --testsuite integration-test
-
-  coding-guidelines:
-    name: Coding Guidelines
-    needs: prepare-php-versions
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ fromJSON(needs.prepare-php-versions.outputs.first) }}
-          tools: cs2pr
-          coverage: none
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Update dependencies
-        run: composer update --no-progress --no-interaction --prefer-dist --optimize-autoloader
-
-      - name: Run phpcs
-        run: vendor/bin/phpcs -q --report=checkstyle | cs2pr
-
-  type-checker:
-    name: Type Checker
-    needs: prepare-php-versions
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ fromJSON(needs.prepare-php-versions.outputs.first) }}
-          coverage: none
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Update dependencies
-        run: composer update --no-progress --no-interaction --prefer-dist --optimize-autoloader
-
-      - name: Run phpstan
-        run: vendor/bin/phpstan analyse --no-interaction
