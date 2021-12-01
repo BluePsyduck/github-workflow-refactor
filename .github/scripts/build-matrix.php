@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$versions = explode(' ', getenv('PHP_VERSIONS'));
+$versions = explode(' ', '8.0 7.4');
 $suites = [];
 
 if (file_exists('vendor/bin/phpunit')) {
