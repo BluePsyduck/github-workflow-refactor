@@ -30,7 +30,7 @@ jobs:
       - name: Set build matrix
         id: set-outputs
         run: |
-          echo '::set-output name=matrix::${{ steps.matrix.output }}'
+          echo '::set-output name=matrix::${{ steps.matrix.outputs.value }}'
 
   test:
     name: PHPUnit tests
