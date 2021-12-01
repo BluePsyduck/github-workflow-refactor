@@ -26,7 +26,7 @@ jobs:
       - name: Generate build matrix
         id: matrix
         run: |
-          echo '::set-output name=output::$(php .github/scripts/build-matrix.php)'
+          echo "::set-output name=output::$(php .github/scripts/build-matrix.php)"
 
       - name: Set build matrix
         id: set-outputs
