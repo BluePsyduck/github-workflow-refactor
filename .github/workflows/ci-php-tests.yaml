@@ -34,12 +34,11 @@ jobs:
           echo '::set-output name=matrix::${{ steps.matrix.outputs.output }}'
 
   test:
-    name: PHPUnit tests
+    name: PHPUnit
     needs: prepare-matrix
     strategy:
       fail-fast: false
-      matrix:
-        php-version: ${{ fromJSON(needs.prepare-matrix.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.prepare-matrix.outputs.matrix) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
