@@ -5,7 +5,7 @@ declare(strict_types=1);
 $versions = explode(' ', getenv('PHP_VERSIONS'));
 $suites = [];
 
-var_dump(__DIR__, file_exists('../vendor/bin/phpunit'), file_exists('vendor/bin/phpunit'), $versions);die;
+var_dump(getcwd());die;
 
 if (file_exists('../vendor/bin/phpunit')) {
     $output = shell_exec('../vendor/bin/phpunit --list-suites');
