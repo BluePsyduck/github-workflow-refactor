@@ -25,12 +25,13 @@ jobs:
 
       - name: Generate build matrix
         id: matrix
-        run: php .github/scripts/build-matrix.php
+        run: |
+          echo '::set-output name=output::$(php .github/scripts/build-matrix.php)'
 
       - name: Set build matrix
         id: set-outputs
         run: |
-          echo '::set-output name=matrix::${{ steps.matrix.outputs.value }}'
+          echo '::set-output name=matrix::${{ steps.matrix.outputs.output }}'
 
   test:
     name: PHPUnit tests
