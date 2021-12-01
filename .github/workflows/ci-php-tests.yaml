@@ -24,7 +24,7 @@ jobs:
       - name: Generate build matrix
         id: matrix
         env:
-          PHP_VERSIONS: ${{ input.php-versions }}
+          PHP_VERSIONS: ${{ inputs.php-versions }}
         run: |
           echo "::set-output name=matrix::$(php .github/scripts/build-matrix.php)"
     outputs:
