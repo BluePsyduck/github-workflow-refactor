@@ -2,8 +2,6 @@ name: CI
 on:
   push:
   pull_request:
-  schedule:
-    - cron: "0 0 * * 0"
 
 env:
   PHP_VERSIONS: '8.0 7.4'
@@ -11,7 +9,7 @@ env:
 jobs:
   call-worklfow:
     name: Call general PHP workflow
-    uses: .github/workflows/ci-php-general.yaml@master
+    uses: bluepsyduck/github-workflow-refactor/.github/workflows/ci-php-general.yaml@master
 
   prepare-php-versions:
     name: Prepare PHP Versions
