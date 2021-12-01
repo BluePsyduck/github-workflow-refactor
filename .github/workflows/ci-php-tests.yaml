@@ -32,47 +32,47 @@ jobs:
         run: echo '${{ steps.matrix.outputs.matrix }}'
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
-
-  test:
-    name: PHPUnit
-    needs: prepare-matrix
-    if: needs.prepare-matrix.outputs.matrix != '[]'
-    strategy:
-      fail-fast: false
-      matrix: 
-        include: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.version }}
-          coverage: xdebug
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Setup problem matchers
-        run: |
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-          echo "::add-matcher::.github/problem-matchers/coverage-check.json"
-
-      - name: Install dependencies
-        run: composer install --no-progress --no-interaction --prefer-dist --optimize-autoloader
-
-      - name: Run phpunit
-        run: vendor/bin/phpunit --testsuite=${{ matrix.suite }} --coverage-clover=coverage.xml
+#
+#  test:
+#    name: PHPUnit
+#    needs: prepare-matrix
+#    if: needs.prepare-matrix.outputs.matrix != '[]'
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        include: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.version }}
+#          coverage: xdebug
+#
+#      - name: Get composer cache directory
+#        id: composer-cache
+#        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+#
+#      - name: Cache composer dependencies
+#        uses: actions/cache@v2
+#        with:
+#          path: ${{ steps.composer-cache.outputs.dir }}
+#          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+#          restore-keys: ${{ runner.os }}-composer-
+#
+#      - name: Setup problem matchers
+#        run: |
+#          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+#          echo "::add-matcher::.github/problem-matchers/coverage-check.json"
+#
+#      - name: Install dependencies
+#        run: composer install --no-progress --no-interaction --prefer-dist --optimize-autoloader
+#
+#      - name: Run phpunit
+#        run: vendor/bin/phpunit --testsuite=${{ matrix.suite }} --coverage-clover=coverage.xml
 
 #      - name: Check coverage.xml existence
 #        id: check-coverage-file

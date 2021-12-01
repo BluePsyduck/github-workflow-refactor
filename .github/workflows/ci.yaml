@@ -7,9 +7,9 @@ env:
   PHP_VERSIONS: '8.0 7.4'
 
 jobs:
-  call-workflow-ci-php-general:
-    name: General
-    uses: bluepsyduck/github-workflow-refactor/.github/workflows/ci-php-general.yaml@master
+#  call-workflow-ci-php-general:
+#    name: General
+#    uses: bluepsyduck/github-workflow-refactor/.github/workflows/ci-php-general.yaml@master
 
   call-workflow-ci-php-tests:
     name: Tests
