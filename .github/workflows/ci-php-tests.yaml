@@ -27,12 +27,16 @@ jobs:
           PHP_VERSIONS: ${{ inputs.php-versions }}
         run: |
           echo "::set-output name=matrix::$(php .github/scripts/build-matrix.php)"
+
+      - name: Print matrix
+        run: echo '${{ steps.matrix.outputs.matrix }}'
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
 
   test:
     name: PHPUnit
     needs: prepare-matrix
+    if: needs.prepare-matrix.outputs.matrix != '[]'
     strategy:
       fail-fast: false
       matrix: 
