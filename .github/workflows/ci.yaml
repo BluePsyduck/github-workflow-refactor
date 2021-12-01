@@ -13,7 +13,7 @@ jobs:
     name: Call general PHP workflow
     runs-on: ubuntu-latest
     steps:
-      - uses: .github/workflows/ci-php-general.yaml
+      - uses: ./.github/workflows/ci-php-general.yaml
 
   prepare-php-versions:
     name: Prepare PHP Versions
