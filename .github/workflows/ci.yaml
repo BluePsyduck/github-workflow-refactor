@@ -8,7 +8,6 @@ env:
 
 jobs:
   call-worklfow:
-    name: Call ci-php-general workflow
     uses: bluepsyduck/github-workflow-refactor/.github/workflows/ci-php-general.yaml@master
 
   prepare-php-versions:
