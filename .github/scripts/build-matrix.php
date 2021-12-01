@@ -14,8 +14,8 @@ if (file_exists('vendor/bin/phpunit')) {
 
 $matrix = [];
 if (count($versions) > 0 && count($suites) > 0) {
-    foreach ($versions as $version) {
-        foreach ($suites as $suite) {
+    foreach ($suites as $suite) {
+        foreach ($versions as $version) {
             $matrix[] = [
                 'suite' => $suite,
                 'version' => $version,
