@@ -11,8 +11,6 @@ jobs:
   prepare-matrix:
     name: Prepare build matrix
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-outputs.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -26,19 +24,16 @@ jobs:
       - name: Generate build matrix
         id: matrix
         run: |
-          echo "::set-output name=output::$(php .github/scripts/build-matrix.php)"
-
-      - name: Set build matrix
-        id: set-outputs
-        run: |
-          echo '::set-output name=matrix::${{ steps.matrix.outputs.output }}'
+          echo "::set-output name=matrix::$(php .github/scripts/build-matrix.php)"
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
 
   test:
     name: PHPUnit
     needs: prepare-matrix
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.prepare-matrix.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
