@@ -19,7 +19,6 @@ if (count($versions) > 0 && count($suites) > 0) {
             $matrix[] = [
                 'suite' => $suite,
                 'version' => $version,
-                'cover' => $suite === 'unit-test',
             ];
         }
     }
