@@ -6,6 +6,11 @@ on:
         description: The space sparated list of PHP versions to use for the tests.
         default: "8.0 7.4"
         required: false
+      min-php-version:
+        type: string
+        description: The minimal PHP version to use for the tests.
+        default: "7.4"
+        required: false
       suite-with-coverage:
         type: string
         description: The test suite which is used to check the code coverage.
@@ -44,6 +49,7 @@ jobs:
         id: matrix
         env:
           PHP_VERSIONS: ${{ inputs.php-versions }}
+          MIN_PHP_VERSION: ${{ inputs.min-php-version }}
         run: |
           echo "::set-output name=matrix::$(php .github/scripts/build-matrix.php)"
 
