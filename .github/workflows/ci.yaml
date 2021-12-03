@@ -11,5 +11,3 @@ jobs:
   call-workflow-ci-php-tests:
     name: Tests
     uses: bluepsyduck/github-workflows/.github/workflows/ci-php-tests.yaml@master
-    with:
-      min-php-version: "8.0"
