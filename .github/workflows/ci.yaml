@@ -3,7 +3,6 @@ on:
   push:
   pull_request:
 
-
 jobs:
   call-workflow-ci-php-general:
     name: General
