@@ -6,10 +6,10 @@ on:
 jobs:
   call-workflow-ci-php-general:
     name: General
-    uses: bluepsyduck/github-workflow-refactor/.github/workflows/ci-php-general.yaml@master
+    uses: bluepsyduck/github-workflows/.github/workflows/ci-php-general.yaml@master
 
   call-workflow-ci-php-tests:
     name: Tests
-    uses: bluepsyduck/github-workflow-refactor/.github/workflows/ci-php-tests.yaml@master
+    uses: bluepsyduck/github-workflows/.github/workflows/ci-php-tests.yaml@master
     with:
       min-php-version: "8.0"
